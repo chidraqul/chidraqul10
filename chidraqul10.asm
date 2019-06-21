@@ -86,7 +86,7 @@ print_menu:
     mov         rax,        SYS_WRITE
     mov         rdi,        1
     mov         rdx,        l_menu
-    syscall                             ; sys_write(1, s_end, l_end)
+    syscall     ; sys_write(1, s_end, l_end)
     ret
 
 insane_console:
