@@ -4,13 +4,13 @@
 global _start:
 
 section     .data
-    s_menu  db      0x0a,"+--+ chidraqul10 +--+",0x0a
+    s_menu  db      "+--+ chidraqul10 +--+",0x0a
     l_menu  equ     $ - s_menu
-    s_end   db      0x0a,"quitting the game...",0x0a
+    s_end   db      "quitting the game...",0x0a
     l_end   equ     $ - s_end
-    s_a     db      0x0a,"you pressed a",0x0a
+    s_a     db      "you pressed a",0x0a
     l_a     equ     $ - s_a
-    s_d     db      0x0a,"you pressed d",0x0a
+    s_d     db      "you pressed d",0x0a
     l_d     equ     $ - s_d
     orig    times   10000   db      0
     new     times   10000   db      0
@@ -26,7 +26,7 @@ print_menu:
     syscall                 ; sys_write(1, s_end, l_end)
     ret
 
-init_console:
+insane_console:
     ; fetch the current terminal settings
     mov     rax,    16      ; __NR_ioctl
     mov     rdi,    0       ; fd: stdin
@@ -52,7 +52,7 @@ init_console:
     syscall
     ret
 
-reset_console:
+sane_console:
     ; reset settings (with ioctl again)
     mov     rax,    16      ; __NR_ioctl
     mov     rdi,    0       ; fd: stdin
@@ -78,12 +78,14 @@ key_d:
     jz      keypress_end
 
 keypresses:
+    call    insane_console
     ; read char
     mov     rax,    0       ; __NR_read
     mov     rdi,    0       ; fd: stdin
-    mov     rsi,    char    ; buf: the temporary buffer, cahr
+    mov     rsi,    char    ; buf: the temporary buffer, char
     mov     rdx,    1       ; count: the length of the buffer, 1
     syscall
+    call    sane_console
     cmp     byte[char], 97  ; a
     jz      key_a
     cmp     byte[char], 100 ; d
@@ -99,12 +101,11 @@ gametick:
     ret
 
 _start:
-    call    init_console
     call    print_menu
     call    gametick
 
 end:
-    call    reset_console
+    call    sane_console
     ; print exit message
     mov     rsi,    s_end
     mov     rax,    1
