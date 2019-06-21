@@ -4,6 +4,11 @@
 global _start:
 
 section     .data
+    ; constants
+    KEY_A   equ     97
+    KEY_D   equ     100
+    KEY_ESC equ     13
+    ; variables
     s_menu  db      "+--+ chidraqul10 +--+",0x0a
     l_menu  equ     $ - s_menu
     s_end   db      "quitting the game...",0x0a
@@ -86,11 +91,11 @@ keypresses:
     mov     rdx,    1       ; count: the length of the buffer, 1
     syscall
     call    sane_console
-    cmp     byte[char], 97  ; a
+    cmp     byte[char], KEY_A
     jz      key_a
-    cmp     byte[char], 100 ; d
+    cmp     byte[char], KEY_D
     jz      key_d
-    cmp     byte[char], 13  ; esc
+    cmp     byte[char], KEY_ESC
     jz      end
 keypress_end:
     ret
