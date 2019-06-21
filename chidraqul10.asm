@@ -58,6 +58,11 @@ global _start:
 
 section     .data
     ; constants
+    SYS_READ    equ         0
+    SYS_WRITE   equ         1
+    SYS_OPEN    equ         2
+    SYS_CLOSE   equ         3
+    SYS_EXIT    equ         60
     KEY_A       equ         97
     KEY_D       equ         100
     KEY_ESC     equ         13
@@ -78,7 +83,7 @@ section     .text
 
 print_menu:
     mov         rsi,        s_menu
-    mov         rax,        1
+    mov         rax,        SYS_WRITE
     mov         rdi,        1
     mov         rdx,        l_menu
     syscall                             ; sys_write(1, s_end, l_end)
@@ -125,7 +130,7 @@ sane_console:
 
 key_a:
     mov         rsi,        s_a
-    mov         rax,        1
+    mov         rax,        SYS_WRITE
     mov         rdi,        1
     mov         rdx,        l_a
     syscall
@@ -133,7 +138,7 @@ key_a:
 
 key_d:
     mov         rsi,        s_d
-    mov         rax,        1
+    mov         rax,        SYS_WRITE
     mov         rdi,        1
     mov         rdx,        l_d
     syscall
@@ -142,7 +147,7 @@ key_d:
 keypresses:
     call        insane_console
     ; read char
-    mov         rax,        0           ; __NR_read
+    mov         rax,        SYS_READ    ; __NR_read
     mov         rdi,        0           ; fd: stdin
     mov         rsi,        char        ; buf: the temporary buffer, char
     mov         rdx,        1           ; count: the length of the buffer, 1
@@ -170,11 +175,11 @@ end:
     call        sane_console
     ; print exit message
     mov         rsi,        s_end
-    mov         rax,        1
+    mov         rax,        SYS_WRITE
     mov         rdi,        1
     mov         rdx,        l_end
     syscall     ; sys_write(1, s_end, l_end)
-    mov         rax,        60
+    mov         rax,        SYS_EXIT
     mov         rdi,        0
     syscall     ; sys_exit(0)
 
