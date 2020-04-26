@@ -1,4 +1,5 @@
 #!/bin/bash
+name="${1:-chidraqul10}"
 mkdir -p build/
-nasm -f elf64 chidraqul10.asm -o build/chidraqul10.o
-ld -s -o chidraqul10 build/chidraqul10.o
+nasm -f elf64 "$name.asm" -o "build/$name.o"
+ld -s -o "$name" "build/$name.o"
