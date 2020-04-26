@@ -50,6 +50,9 @@
 ; | 6   | r9       |
 ; +-----+----------+
 
+; System call list
+; /usr/include/asm/unistd_64.h
+
 ; style guide:
 ; tab = 4 spaces
 ; 1-tab 3-tabs 3-tabs 3-tabs 2-tabs
