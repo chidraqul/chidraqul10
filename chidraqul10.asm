@@ -1,4 +1,6 @@
 ; chidraqul10 by ChillerDragon
+; vim: set tabstop=4:softtabstop=4:shiftwidth=4
+; vim: set expandtab:
 ; x86_64 assembly linux ( nasm )
 
 ; 64bit register
@@ -52,6 +54,7 @@
 
 ; System call list
 ; /usr/include/asm/unistd_64.h
+; /usr/include/x86_64-linux-gnu/asm/unistd_64.h
 
 ; style guide:
 ; tab = 4 spaces
@@ -59,7 +62,7 @@
 
 global _start:
 
-section     .data
+section    .data
     ; constants
     SYS_READ    equ         0
     SYS_WRITE   equ         1
@@ -185,4 +188,3 @@ end:
     mov         rax,        SYS_EXIT
     mov         rdi,        0
     syscall     ; sys_exit(0)
-
