@@ -55,6 +55,7 @@
 ; System call list
 ; /usr/include/asm/unistd_64.h
 ; /usr/include/x86_64-linux-gnu/asm/unistd_64.h
+; https://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64/
 
 ; style guide:
 ; tab = 4 spaces
