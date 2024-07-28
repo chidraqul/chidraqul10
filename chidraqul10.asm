@@ -103,7 +103,7 @@ insane_console:
     mov         rsi,        21505       ; cmd: TCGETS
     mov         rdx,        orig        ; arg: the buffer, orig
     syscall
-    ; agian, but this time for the 'new' buffer
+    ; again, but this time for the 'new' buffer
     mov         rax,        16
     mov         rdi,        0
     mov         rsi,        21505
