@@ -74,13 +74,18 @@ section    .data
     O_NONBLOCK  equ         2048
     F_SETFL     equ         4
 
-    KEY_A       equ         97
-    KEY_D       equ         100
-    KEY_ESC     equ         13
+    KEY_A       equ         0x61
+    KEY_D       equ         0x64
+    KEY_Q       equ         0x71
+    KEY_ESC     equ         0x5B
 
     ; variables
     s_menu      db          "+--+ chidraqul10 +--+",0x0a
     l_menu      equ         $ - s_menu
+    s_menu2     db          "| press q to quit   |",0x0a
+    l_menu2     equ         $ - s_menu2
+    s_menu3     db          "+-------------------+",0x0a
+    l_menu3     equ         $ - s_menu3
     s_end       db          "quitting the game...",0x0a
     l_end       equ         $ - s_end
     s_a         db          "you pressed a",0x0a
@@ -98,7 +103,17 @@ print_menu:
     mov         rax,        SYS_WRITE
     mov         rdi,        1
     mov         rdx,        l_menu
-    syscall     ; sys_write(1, s_end, l_end)
+    syscall
+    mov         rsi,        s_menu2
+    mov         rax,        SYS_WRITE
+    mov         rdi,        1
+    mov         rdx,        l_menu2
+    syscall
+    mov         rsi,        s_menu3
+    mov         rax,        SYS_WRITE
+    mov         rdi,        1
+    mov         rdx,        l_menu3
+    syscall
     ret
 
 insane_console:
@@ -191,6 +206,8 @@ keypresses:
     jz          key_a
     cmp         byte[char], KEY_D
     jz          key_d
+    cmp         byte[char], KEY_Q
+    jz          end
     cmp         byte[char], KEY_ESC
     jz          end
 keypress_end:
