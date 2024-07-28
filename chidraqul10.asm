@@ -171,8 +171,7 @@ keypress_end:
 
 gametick:
     call        keypresses
-    call        gametick
-    ret
+    jmp         gametick
 
 _start:
     call        print_menu
