@@ -70,9 +70,14 @@ section    .data
     SYS_OPEN    equ         2
     SYS_CLOSE   equ         3
     SYS_EXIT    equ         60
+
+    O_NONBLOCK  equ         2048
+    F_SETFL     equ         4
+
     KEY_A       equ         97
     KEY_D       equ         100
     KEY_ESC     equ         13
+
     ; variables
     s_menu      db          "+--+ chidraqul10 +--+",0x0a
     l_menu      equ         $ - s_menu
@@ -124,15 +129,31 @@ insane_console:
     mov         rsi,        21506       ; cmd: TCSETS
     mov         rdx,        new         ; arg: the buffer, new
     syscall
+
+    mov         rax,        16          ; __NR_ioctl
+    mov         rdi,        0           ; fd: stdin
+    mov         rsi,        F_SETFL     ; cmd: F_SETFL
+    mov         rdx,        O_NONBLOCK  ; arg: the flag
+    syscall
     ret
 
 sane_console:
+    push rax
+    push rdi
+    push rsi
+    push rdx
+
     ; reset settings (with ioctl again)
     mov         rax,        16          ; __NR_ioctl
     mov         rdi,        0           ; fd: stdin
     mov         rsi,        21506       ; cmd: TCSETS
     mov         rdx,        orig        ; arg: the buffer, orig
     syscall
+
+    pop rdx
+    pop rsi
+    pop rdi
+    pop rax
     ret
 
 key_a:
@@ -160,6 +181,12 @@ keypresses:
     mov         rdx,        1           ; count: the length of the buffer, 1
     syscall
     call        sane_console
+
+    test rax, rax
+    ; if read returned negative
+    ; we do not process the read value as key press
+    js keypress_end
+
     cmp         byte[char], KEY_A
     jz          key_a
     cmp         byte[char], KEY_D
@@ -174,6 +201,12 @@ gametick:
     jmp         gametick
 
 _start:
+    mov         rax,        72          ; __NR_fcntl
+    mov         rdi,        0           ; fd: stdin
+    mov         rsi,        F_SETFL     ; cmd: F_SETFL
+    mov         rdx,        O_NONBLOCK  ; arg: the flag
+    syscall
+
     call        print_menu
     call        gametick
 
